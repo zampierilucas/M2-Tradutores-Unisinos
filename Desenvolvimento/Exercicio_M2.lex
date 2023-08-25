@@ -1,4 +1,4 @@
- /* Atividade M2 da disciplina Tradutores | Aluno: Igor Bartmann. | Data: 22/08/2023 */
+/* Atividade M2 da disciplina Tradutores | Aluno: Igor Bartmann e Lucas Zampieri | Data: 22/08/2023 */
 
 %option noyywrap
 
@@ -11,8 +11,8 @@
 
 DIGIT 		[0-9]
 ID			[a-z][a-z0-9]*
-STRING		['"'][a-zA-Z0-9\s?!,.]*['"']
-COMENTARIO	(['\/']{2}[a-zA-Z0-9\' ']*|[\/]{1}[\*]{1}[a-zA-Z0-9\s]*[\*]{1}[\/]{1})
+STRING		(\"(\\.|[^\\"])*\")
+COMENTARIO	("\/\/"|"\/\*"(.*)\n)
 ARITH_OPERATION	([0-9\' '][\+\-\/\*][0-9\' '])
 
 %%
