@@ -1,11 +1,12 @@
-/// A test coment long long long long end of it
-//Comentário 1
-/* Comentário 2 */
+/// A test coment long long long long
+//Comentário 1 int
+/* Comentário 2 int */
 
 int main() {
   int v[] = {5, 10, 15, 3, 10, 76, 5, 13, 33, 45};
-  int *pt;
+  float *pt;
   int i;
+  char *m;
   pt = v; // Atribui o endereço do vetor
   AlterarVetor(v, 10);
   for (int i = 0; i < 10; i++) {

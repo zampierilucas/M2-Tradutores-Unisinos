@@ -5,15 +5,38 @@
 %{
 
 #include <math.h>
+#include <stdbool.h>
+
+#define TOKEN_LIMIT 99
+
+char token_ids[TOKEN_LIMIT][TOKEN_LIMIT] = {};
+int currentId = 1;
+
+void tokenize() {
+	bool found = false;
+
+	for (int i = 0; i <= TOKEN_LIMIT; i++) {
+		if (strcmp(&yytext[0], token_ids[i]) == 0) {
+			printf("[id, %d] ", i);
+			found = true;
+		}
+	}
+	if (found == false) {
+		strcpy(token_ids[currentId], &yytext[0]);
+		printf("[id, %d] ", currentId);
+		currentId++;
+	}
+}
 
 %}
-
 
 DIGIT 		[0-9]
 ID			[a-z][a-z0-9]*
 STRING		(\"(\\.|[^\\"])*\")
-COMENTARIO	("\/\/"|"\/\*"(.*)\n)
+COMENTARIO_UMA_LINHA	("//"[^\n]*)
+COMENTARIO_MULTIPLAS_LINHA	("/*"([^*]|\*+[^*/])*\*+"/")
 ARITH_OPERATION	([0-9\' '][\+\-\/\*][0-9\' '])
+RESERVED (if|else|then|begin|procedure|function|end|int|float|double|String|string|bool|do|while|for|break|switch|case|return|null|char|auto|const|continue|default|enum|extern|goto|inline|long|register|restrict|short|signed|sizeof|static|struct|typedef|union|unsigned|void|volatile)
 
 %%
 
@@ -21,13 +44,11 @@ ARITH_OPERATION	([0-9\' '][\+\-\/\*][0-9\' '])
 
 {DIGIT}+"."{DIGIT}+ { printf("[num, %s]", yytext); }
 
-if|else|then|begin|procedure|function|end|int|float|double|String|string|bool|do|while|for|break|switch|case|return|null { printf("[reserved_word, %s]", yytext); }
+{STRING}+ { printf("[string_literal, %s]", yytext); tokenize();}
 
-{STRING}+ { printf("[string_literal, %s]", yytext); }
+{COMENTARIO_UMA_LINHA}|{COMENTARIO_MULTIPLAS_LINHA} {printf("[comment_detected, %s]", yytext);}
 
-{COMENTARIO}+ { printf("[comment_detected, %s]", yytext); }
-
-{ID} { printf("[id, %s]", yytext); }
+{RESERVED} { printf("[reserved_word, %s]", yytext); tokenize();}
 
 {ARITH_OPERATION}+ { printf("[Arith_Op, %s]", yytext); }
 
